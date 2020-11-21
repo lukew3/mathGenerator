@@ -5,7 +5,8 @@ import random
 import sympy
 import numpy
 import scipy
-
+from py_asciimath.translator.translator import ASCIIMath2Tex, Tex2ASCIIMath
+from py_asciimath.grammar.asciimath_grammar import asciimath_grammar
 genList = []
 
 
@@ -31,8 +32,13 @@ class Generator:
             self.id
         ) + " " + self.title + " " + self.generalProb + " " + self.generalSol
 
-    def __call__(self, *args, **kwargs):
-        return self.func(*args, **kwargs)
+    def __call__(self, format='raw', *args, **kwargs):
+        return preprocess_set(format, self.func(*args, **kwargs))
+
+        # This section only runs if the format key was not used
+
+        # Detect and remove math indicator in problem and solution
+        # return self.func(*args, **kwargs)
 
 
 def getGenList():
@@ -40,3 +46,21 @@ def getGenList():
     # Orders list by id
     correctedList.sort()
     return correctedList
+
+def preprocess_set(format, set):
+    if format == 'latex':
+        #sentence.index('$$')
+        # Find location of asciimath between $$ delimiters
+        # Then replace current asciimath with tex
+        asciimath2tex = ASCIIMath2Tex(asciimath_grammar)
+        problem = asciimath2tex.translate(set[0])
+        solution = asciimath2tex.translate(set[1])
+        problem = '$' + problem + '$'
+        solution = '$' + solution + '$'
+        return problem, solution
+    elif format == 'asciimath':
+        return set
+    elif format == 'raw':
+        problem = set[0].replace('$$', '')
+        solution = set[1].replace('$$', '')
+        return problem, solution
