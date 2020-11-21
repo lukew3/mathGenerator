@@ -47,20 +47,36 @@ def getGenList():
     correctedList.sort()
     return correctedList
 
+# This is a really messy way of formatting asciimath as latex
 def preprocess_set(format, set):
     if format == 'latex':
         #sentence.index('$$')
-        # Find location of asciimath between $$ delimiters
-        # Then replace current asciimath with tex
+        # Get original math string
+        full_problem = set[0]
+        full_solution = set[1]
+        orig_problem_string = get_inner_string(full_problem)
+        orig_solution_string = get_inner_string(full_solution)
+        # Replace current asciimath with tex
         asciimath2tex = ASCIIMath2Tex(asciimath_grammar)
-        problem = asciimath2tex.translate(set[0])
-        solution = asciimath2tex.translate(set[1])
-        problem = '$' + problem + '$'
-        solution = '$' + solution + '$'
-        return problem, solution
+        problem = asciimath2tex.translate(orig_problem_string)
+        solution = asciimath2tex.translate(orig_solution_string)
+        # Put new latex implementation into original string
+        # This doesn't take into consideration delimiters
+        full_problem.replace(orig_problem_string, problem)
+        full_solution.replace(orig_solution_string, solution)
+        return full_problem, full_solution
     elif format == 'asciimath':
         return set
     elif format == 'raw':
+        # Remove delimeters and show math in the format it was in originally
         problem = set[0].replace('$$', '')
         solution = set[1].replace('$$', '')
         return problem, solution
+
+def get_inner_string(string):
+    firstIndex = string.find('$$') + 2
+    if first_string == -1:
+        return string
+    secondIndex = string.find('$$', firstIndex)
+    inner = string.substring(firstIndex, secondIndex)
+    return inner

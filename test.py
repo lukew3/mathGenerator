@@ -3,6 +3,7 @@ from mathgenerator import mathgen
 # test your generators here
 print(mathgen.addition())
 print(mathgen.addition(format='latex'))
+print(mathgen.multiply_int_to_22_matrix(format='latex'))
 
 # prints each generator in genList
 list = mathgen.getGenList()
