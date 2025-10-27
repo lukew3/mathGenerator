@@ -790,3 +790,35 @@ def orthogonal_projection(min_val=-10, max_val=10):
     problem = f'Find the orthogonal projection of ${v}$ onto ${u}$'
     solution = f'$[{y[0]}, {y[1]}]$'
     return problem, solution
+
+def system_of_equations_2var(max_coef=10):
+    r"""System of Equations in 2 Variables
+
+    | Ex. Problem | Ex. Solution |
+    | --- | --- |
+    | Solve the system: $2x + 3y = 12$ and $4x - y = 6$ | $x = 3, y = 2$ |
+    """
+    # Generate coefficients that will give integer solutions
+    while True:
+        a1 = random.randint(1, max_coef)
+        b1 = random.randint(1, max_coef)
+        a2 = random.randint(1, max_coef) 
+        b2 = random.randint(1, max_coef)
+        c1 = random.randint(1, max_coef * 2)
+        c2 = random.randint(1, max_coef * 2)
+
+        # Calculate determinant
+        det = a1 * b2 - a2 * b1
+        
+        if det != 0:  # Ensure system has unique solution
+            x = (c1 * b2 - c2 * b1) / det
+            y = (a1 * c2 - a2 * c1) / det
+            
+            # Check if solutions are integers (for simplicity)
+            if x == int(x) and y == int(y):
+                x, y = int(x), int(y)
+                break
+    
+    problem = f"Solve the system: ${a1}x + {b1}y = {c1}$ and ${a2}x + {b2}y = {c2}$"
+    solution = f"$x = {x}, y = {y}$"
+    return problem, solution
